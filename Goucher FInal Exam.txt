@@ -1,0 +1,2224 @@
+---
+title: "SPHU 4160 Final"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+
+
+
+```{r setup} 
+#Preamble
+#------------------------------------------------------------------------#
+# Final Exam                                                             #
+# Erin Goucher December 13th 2019  egoucher@tulane.edu                   #
+#                                                                        #
+# This is the script  for the final exam for SPHU 4160.                  #
+# It was developed in R 3.5.1.                                           #
+#------------------------------------------------------------------------#
+
+library(tidyverse)
+library(devtools)
+library(ggplot2)
+library(Hmisc)
+library(knitr)
+library(dplyr)
+
+```
+```{r print and get runtime}
+date()
+```
+
+```{r Get Working Directory}
+getwd()
+setwd("/Users/Erin/Documents/sphu4160/fall_2019/class_library_R")
+``` 
+
+```{r Import Data}
+mydata <-read.csv("C://Users/Erin/Documents/sphu4160/fall_2019/class_library_R/nola_CRIME_2018.csv")
+```
+
+```{r Questions 1 and 2}
+dim(mydata)
+```
+1. 9970 observations
+2. 24 variable
+
+
+
+
+```{r Question 3}
+unique(mydata)
+```
+3. 9963 unique item numbers 
+
+
+```{r Question 4}
+distinct(mydata)
+summary(mydata$Signal_Description)
+```
+
+```{r}
+q4data <- subset(mydata, GNOCDC_LAB == "IRISH CHANNEL" & Signal_Description == "AGGRAVATED ASSAULT",  select=c(Signal_Description, GNOCDC_LAB))
+
+print(q4data)
+```
+
+```{r}
+q41data <- subset(mydata, GNOCDC_LAB == "IRISH CHANNEL" & Signal_Description == "AGGRAVATED ASSAULT (DOMESTIC)",  select=c(Signal_Description, GNOCDC_LAB))
+
+print(q41data)
+```
+```{r}
+q42data <- subset(mydata, GNOCDC_LAB == "IRISH CHANNEL" & Signal_Description == "AGGRAVATED BATTERY (SHOOTING)",  select=c(Signal_Description, GNOCDC_LAB))
+
+print(q42data)
+```
+```{r}
+q43data <- subset(mydata, GNOCDC_LAB == "IRISH CHANNEL" & Signal_Description == "AGGRAVATED BATTERY (CUTTING)",  select=c(Signal_Description, GNOCDC_LAB))
+
+print(q43data)
+```
+
+```{r}
+q44data <- subset(mydata, GNOCDC_LAB == "IRISH CHANNEL" & Signal_Description == "AGGRAVATED RAPE",  select=c(Signal_Description, GNOCDC_LAB))
+
+print(q44data)
+```
+
+```{r}
+q45data <- subset(mydata, GNOCDC_LAB == "IRISH CHANNEL" & Signal_Description == "AGGRAVATED CRIMINAL DAMAGE",  select=c(Signal_Description, GNOCDC_LAB))
+
+print(q45data)
+```
+
+```{r}
+q46data <- subset(mydata, GNOCDC_LAB == "IRISH CHANNEL" & Signal_Description == "AGGRAVATED BATTERY",  select=c(Signal_Description, GNOCDC_LAB))
+
+print(q46data)
+```
+
+```{r}
+q47data <- subset(mydata, GNOCDC_LAB == "IRISH CHANNEL" & Signal_Description == "AGGRAVATED BURGLARY",  select=c(Signal_Description, GNOCDC_LAB))
+
+print(q47data)
+```
+
+```{r}
+q48data <- subset(mydata, GNOCDC_LAB == "IRISH CHANNEL" & Signal_Description == "AGGRAVATED BATTERY (DOMESTIC)",  select=c(Signal_Description, GNOCDC_LAB))
+
+print(q48data)
+```
+
+
+```{r}
+q49data <- subset(mydata, GNOCDC_LAB == "IRISH CHANNEL" & Signal_Description == "AGGRAVATED BURGLARY (DOMESTIC)",  select=c(Signal_Description, GNOCDC_LAB))
+
+print(q49data)
+```
+
+
+```{r}
+q410data <- subset(mydata, GNOCDC_LAB == "IRISH CHANNEL" & Signal_Description == "AGGRAVATED RAPE UNFOUNDED",  select=c(Signal_Description, GNOCDC_LAB))
+
+print(q410data)
+```
+
+
+```{r}
+q411data <- subset(mydata, GNOCDC_LAB == "IRISH CHANNEL" & Signal_Description == "ATTEMPTED AGGRAVATED RAPE",  select=c(Signal_Description, GNOCDC_LAB))
+
+print(q411data)
+```
+
+4. There was only 1 aggravated crime in the Irish Channel
+
+```{r Question 5}
+
+table(mydata$GNOCDC_LAB)
+```
+
+5.	The two neighborhoods with the highest crime numbers last year were the French Quarter and Little Woods 
+
+
+
+
+```{r QUestion 6, 7 and 8}
+popdata <- subset(mydata, select=c(pop,GNOCDC_LAB))
+popdata[!duplicated(popdata[1:2]),]
+sum(popdata$pop, na.rm=TRUE)
+```
+```{r}
+tulanedata <- subset(mydata, GNOCDC_LAB== "TULANE - GRAVIER", select=c(GNOCDC_LAB, pop))
+print(tulanedata)
+```
+```{r Tulane rate of crime}
+(712/17445)*1000
+```
+
+```{r Tulane ratio of crime} 
+(40.81399/0.7863321)
+```
+
+```{r}
+centralcitydata <- subset(mydata, GNOCDC_LAB== "CENTRAL CITY", select=c(GNOCDC_LAB, pop))
+print(centralcitydata)
+```
+```{r Central City rate of crime}
+(576/35385)*1000
+```
+```{r Central city ratio of crime} 
+(16.27808/0.7863321)
+```
+
+```{r}
+plumdata <- subset(mydata, GNOCDC_LAB== "PLUM ORCHARD", select=c(GNOCDC_LAB, pop))
+print(plumdata)
+```
+
+```{r Plum Orchard rate of crime}
+(98/14671)*1000
+```
+
+```{r Plum Orchard ratio of crime} 
+(6.679845/0.7863321)
+```
+
+```{r}
+lakeviewdata <- subset(mydata, GNOCDC_LAB== "LAKEVIEW", select=c(GNOCDC_LAB, pop))
+print(lakeviewdata)
+```
+
+```{r Lakeview rate of crime}
+(55/16938)*1000
+```
+
+```{r Lakeview ratio of crime} 
+(3.247137/0.7863321)
+```
+
+```{r}
+sevendata <- subset(mydata, GNOCDC_LAB== "SEVENTH WARD", select=c(GNOCDC_LAB, pop))
+print(sevendata)
+```
+```{r rate of crime}
+(438/23878)*1000
+```
+
+```{r ratio of crime} 
+(18.34324/0.7863321)
+```
+
+```{r}
+rochdata <- subset(mydata, GNOCDC_LAB== "ST. ROCH", select=c(GNOCDC_LAB, pop))
+print(rochdata)
+```
+
+```{r rate of crime}
+(310/32067)*1000
+```
+
+```{r ratio of crime} 
+(9.667259/0.7863321)
+```
+
+
+```{r}
+claudedata <- subset(mydata, GNOCDC_LAB== "ST. CLAUDE", select=c(GNOCDC_LAB, pop))
+print(claudedata)
+```
+
+```{r rate of crime}
+(316/18616)*1000
+```
+
+```{r ratio of crime} 
+(16.97465/0.7863321)
+```
+
+```{r}
+crossdata <- subset(mydata, GNOCDC_LAB== "HOLY CROSS", select=c(GNOCDC_LAB, pop))
+print(crossdata)
+```
+```{r rate}
+(113/12942)*1000
+```
+
+```{r ratio} 
+(8.731263/0.7863321)
+```
+
+
+```{r}
+frenchdata <- subset(mydata, GNOCDC_LAB== "FRENCH QUARTER", select=c(GNOCDC_LAB, pop))
+print(frenchdata)
+```
+```{r rate}
+(720/15172)*1000
+```
+```{r ratio} 
+(47.45584/0.7863321)
+```
+
+
+```{r}
+ninthdata <- subset(mydata, GNOCDC_LAB== "LOWER NINTH WARD", select=c(GNOCDC_LAB, pop))
+print(ninthdata)
+```
+
+
+```{r rate}
+(168/9228)*1000
+```
+
+```{r ratio} 
+(18.20546/0.7863321)
+```
+
+```{r}
+audata <- subset(mydata, GNOCDC_LAB== "AUDUBON", select=c(GNOCDC_LAB, pop))
+print(audata)
+```
+
+```{r rate}
+(107/37946)*1000
+```
+
+```{r ratio} 
+(2.819797/0.7863321)
+```
+
+```{r}
+olddata <- subset(mydata, GNOCDC_LAB== "OLD AURORA", select=c(GNOCDC_LAB, pop))
+print(olddata)
+```
+
+```{r rate}
+(218/40130)*1000
+```
+
+```{r ratio} 
+(5.432345/0.7863321)
+```
+
+```{r}
+milandata <- subset(mydata, GNOCDC_LAB== "MILAN", select=c(GNOCDC_LAB, pop))
+print(milandata)
+```
+```{r rate}
+(150/21588)*1000
+```
+
+```{r ratio} 
+(6.948305/0.7863321)
+```
+
+
+```{r}
+littledata <- subset(mydata, GNOCDC_LAB== "LITTLE WOODS", select=c(GNOCDC_LAB, pop))
+print(littledata)
+```
+
+```{r rate}
+(632/44947)*1000
+```
+
+```{r ratio} 
+(14.06101/0.7863321)
+```
+
+```{r}
+cbddata <- subset(mydata, GNOCDC_LAB== "CENTRAL BUSINESS DISTRICT", select=c(GNOCDC_LAB, pop))
+print(cbddata)
+```
+
+```{r}
+(582/18764)*1000
+```
+
+```{r} 
+(31.01684/0.7863321)
+```
+
+```{r}
+berdata <- subset(mydata, GNOCDC_LAB== "BEHRMAN", select=c(GNOCDC_LAB, pop))
+print(berdata)
+```
+```{r}
+(247/25562)*1000
+```
+
+```{r} 
+(9.662781/0.7863321)
+```
+
+
+```{r}
+leondata <- subset(mydata, GNOCDC_LAB== "LEONIDAS", select=c(GNOCDC_LAB, pop))
+print(leondata)
+```
+
+```{r}
+(148/21271)*1000
+```
+
+```{r} 
+(6.95783/0.7863321)
+```
+
+```{r}
+gendata <- subset(mydata, GNOCDC_LAB== "GENTILLY TERRACE", select=c(GNOCDC_LAB, pop))
+print(gendata)
+```
+```{r}
+(133/23183)*1000
+```
+
+```{r} 
+(5.736962/0.7863321)
+```
+
+
+
+```{r}
+middata <- subset(mydata, GNOCDC_LAB== "MID-CITY", select=c(GNOCDC_LAB, pop))
+print(middata)
+```
+
+```{r}
+(360/29937)*1000
+```
+
+```{r} 
+(12.02525/0.7863321)
+```
+
+```{r}
+cpdata <- subset(mydata, GNOCDC_LAB== "CITY PARK", select=c(GNOCDC_LAB, pop))
+print(cpdata)
+```
+```{r}
+(31/24140)*1000
+```
+
+```{r} 
+(1.284176/0.7863321)
+```
+
+
+```{r}
+vdldata <- subset(mydata, GNOCDC_LAB== "VILLAGE DE LEST", select=c(GNOCDC_LAB, pop))
+print(vdldata)
+```
+
+```{r}
+(77/25445)*1000
+```
+
+```{r} 
+(3.026135/0.7863321)
+```
+
+
+```{r}
+fischdata <- subset(mydata, GNOCDC_LAB== "FISCHER DEV", select=c(GNOCDC_LAB, pop))
+print(fischdata)
+```
+```{r}
+(27/9467)*1000
+```
+
+```{r} 
+(2.852012/0.7863321)
+```
+
+```{r}
+westdata <- subset(mydata, GNOCDC_LAB== "WEST RIVERSIDE", select=c(GNOCDC_LAB, pop))
+print(westdata)
+```
+
+```{r}
+(82/15349)*1000
+```
+
+```{r} 
+(5.342368/0.7863321)
+```
+
+```{r}
+tremedata <- subset(mydata, GNOCDC_LAB== "TREME - LAFITTE", select=c(GNOCDC_LAB, pop))
+print(tremedata)
+```
+
+```{r}
+(198/18492)*1000
+```
+
+```{r} 
+(10.70733/0.7863321)
+```
+
+
+```{r}
+talldata <- subset(mydata, GNOCDC_LAB== "TALL TIMBERS - BRECHTEL", select=c(GNOCDC_LAB, pop))
+print(talldata)
+```
+
+```{r}
+(229/35314)*1000
+```
+
+```{r} 
+(6.48468/0.7863321)
+```
+
+```{r}
+vvidata <- subset(mydata, GNOCDC_LAB== "VIAVANT - VENETIAN ISLES", select=c(GNOCDC_LAB, pop))
+print(vvidata)
+```
+
+```{r}
+(230/26085)*1000
+```
+
+```{r} 
+(8.817328/0.7863321)
+```
+
+```{r}
+lcdata <- subset(mydata, GNOCDC_LAB== "LAKE CATHERINE", select=c(GNOCDC_LAB, pop))
+print(lcdata)
+```
+```{r}
+(35/2564)*1000
+```
+
+```{r} 
+(13.65055/0.7863321)
+```
+
+
+```{r}
+dildata <- subset(mydata, GNOCDC_LAB== "DILLARD", select=c(GNOCDC_LAB, pop))
+print(dildata)
+```
+```{r}
+(125/14753)*1000
+```
+
+```{r} 
+(8.472853/0.7863321)
+```
+
+
+
+```{r}
+wlfdata <- subset(mydata, GNOCDC_LAB== "WEST LAKE FOREST", select=c(GNOCDC_LAB, pop))
+print(wlfdata)
+```
+
+```{r}
+(193/25071)*1000
+```
+
+```{r} 
+(7.698137/0.7863321)
+```
+
+```{r}
+hollydata <- subset(mydata, GNOCDC_LAB== "HOLLYGROVE", select=c(GNOCDC_LAB, pop))
+print(hollydata)
+```
+
+```{r}
+(150/11723)*1000
+```
+
+```{r} 
+(12.79536/0.7863321)
+```
+
+```{r}
+gertdata <- subset(mydata, GNOCDC_LAB== "GERT TOWN", select=c(GNOCDC_LAB, pop))
+print(gertdata)
+```
+```{r}
+(139/22081)*1000
+```
+
+```{r} 
+(6.295005/0.7863321)
+```
+
+
+```{r}
+ridadata <- subset(mydata, GNOCDC_LAB== "FLORIDA AREA", select=c(GNOCDC_LAB, pop))
+print(ridadata)
+```
+
+```{r}
+(52/9424)*1000
+```
+
+```{r} 
+(5.517827/0.7863321)
+```
+
+```{r}
+lcddata <- subset(mydata, GNOCDC_LAB== "LOWER GARDEN DISTRICT", select=c(GNOCDC_LAB, pop))
+print(lcddata)
+```
+```{r}
+(146/18708)*1000
+```
+
+```{r} 
+(7.804148/0.7863321)
+```
+
+```{r}
+bydata <- subset(mydata, GNOCDC_LAB== "BYWATER", select=c(GNOCDC_LAB, pop))
+print(bydata)
+```
+```{r}
+(155/25185)*1000
+```
+
+```{r} 
+(6.154457/0.7863321)
+```
+
+
+```{r}
+mardata <- subset(mydata, GNOCDC_LAB== "MARIGNY", select=c(GNOCDC_LAB, pop))
+print(mardata)
+```
+
+```{r}
+(91/11334)*1000
+```
+
+```{r} 
+(8.028939/0.7863321)
+```
+
+
+```{r}
+desiredata <- subset(mydata, GNOCDC_LAB== "DESIRE AREA", select=c(GNOCDC_LAB, pop))
+print(desiredata)
+```
+```{r}
+(181/17275)*1000
+```
+
+```{r} 
+(10.47757/0.7863321)
+```
+
+
+```{r}
+bwdata <- subset(mydata, GNOCDC_LAB== "B. W. COOPER", select=c(GNOCDC_LAB, pop))
+print(bwdata)
+```
+```{r}
+(28/7821)*1000
+```
+
+```{r} 
+(3.580105/0.7863321)
+```
+
+
+```{r}
+stddata <- subset(mydata, GNOCDC_LAB== "ST. THOMAS DEV", select=c(GNOCDC_LAB, pop))
+print(stddata)
+```
+```{r}
+(50/9002)*1000
+```
+
+```{r} 
+(5.554321/0.7863321)
+```
+
+
+```{r}
+dixdata <- subset(mydata, GNOCDC_LAB== "DIXON", select=c(GNOCDC_LAB, pop))
+print(dixdata)
+```
+
+```{r}
+(30/15056)*1000
+```
+
+```{r} 
+(1.992561/0.7863321)
+```
+
+```{r}
+navydata <- subset(mydata, GNOCDC_LAB== "U.S. NAVAL BASE", select=c(GNOCDC_LAB, pop))
+print(navydata)
+```
+```{r}
+(84/18304)*1000
+```
+
+```{r} 
+(4.589161/0.7863321)
+```
+
+
+
+```{r}
+pinesdata <- subset(mydata, GNOCDC_LAB== "PINES VILLAGE", select=c(GNOCDC_LAB, pop))
+print(pinesdata)
+```
+
+```{r}
+(134/20976)*1000
+```
+
+```{r} 
+(6.388253/0.7863321)
+```
+
+
+```{r}
+marydata <- subset(mydata, GNOCDC_LAB== "MARLYVILLE - FONTAINEBLEAU", select=c(GNOCDC_LAB, pop))
+print(marydata)
+```
+
+```{r}
+(82/20273)*1000
+```
+
+```{r} 
+(4.044789/0.7863321)
+```
+
+```{r}
+milndata <- subset(mydata, GNOCDC_LAB== "MILNEBURG", select=c(GNOCDC_LAB, pop))
+print(milndata)
+```
+
+```{r}
+(62/14607)*1000
+```
+
+```{r} 
+(4.24454/0.7863321)
+```
+
+```{r}
+rbedata <- subset(mydata, GNOCDC_LAB== "READ BLVD EAST", select=c(GNOCDC_LAB, pop))
+print(rbedata)
+```
+
+```{r}
+(176/21863)*1000
+```
+
+```{r} 
+(8.05013/0.7863321)
+```
+
+```{r}
+rbwdata <- subset(mydata, GNOCDC_LAB== "READ BLVD WEST", select=c(GNOCDC_LAB, pop))
+print(rbwdata)
+```
+```{r}
+(52/16788)*1000
+```
+
+```{r} 
+(3.097451/0.7863321)
+```
+
+
+```{r}
+algpdata <- subset(mydata, GNOCDC_LAB== "ALGIERS POINT", select=c(GNOCDC_LAB, pop))
+print(algpdata)
+```
+
+```{r}
+(30/12848)*1000
+```
+
+```{r} 
+(2.334994/0.7863321)
+```
+
+```{r}
+sbadata <- subset(mydata, GNOCDC_LAB== "ST. BERNARD AREA", select=c(GNOCDC_LAB, pop))
+print(sbadata)
+```
+
+
+```{r}
+(51/8349)*1000
+```
+
+```{r} 
+(6.108516/0.7863321)
+```
+```{r}
+tourdata <- subset(mydata, GNOCDC_LAB== "TOURO", select=c(GNOCDC_LAB, pop))
+print(tourdata)
+```
+```{r}
+(65/16244)*1000
+```
+
+```{r} 
+(4.001477/0.7863321)
+```
+
+
+```{r}
+uptdata <- subset(mydata, GNOCDC_LAB== "UPTOWN", select=c(GNOCDC_LAB, pop))
+print(uptdata)
+```
+
+```{r}
+(65/20018)*1000
+```
+
+```{r} 
+(3.247078/0.7863321)
+```
+
+```{r}
+broaddata <- subset(mydata, GNOCDC_LAB== "BROADMOOR", select=c(GNOCDC_LAB, pop))
+print(broaddata)
+```
+
+```{r}
+(93/15376)*1000
+```
+
+```{r} 
+(6.048387/0.7863321)
+```
+
+```{r}
+mcddata <- subset(mydata, GNOCDC_LAB== "McDONOGH", select=c(GNOCDC_LAB, pop))
+print(mcddata)
+```
+
+```{r}
+(54/7211)*1000
+```
+
+```{r} 
+(7.488559/0.7863321)
+```
+
+
+```{r}
+filmdata <- subset(mydata, GNOCDC_LAB== "FILMORE", select=c(GNOCDC_LAB, pop))
+print(filmdata)
+```
+```{r}
+(89/19005)*1000
+```
+
+```{r} 
+(4.682978/0.7863321)
+```
+
+
+```{r}
+ltodata <- subset(mydata, GNOCDC_LAB== "LAKE TERRACE & OAKS", select=c(GNOCDC_LAB, pop))
+print(ltodata)
+```
+
+```{r}
+(27/18362)*1000
+```
+
+```{r} 
+(1.470428/0.7863321)
+```
+
+```{r}
+whitdata <- subset(mydata, GNOCDC_LAB== "WHITNEY", select=c(GNOCDC_LAB, pop))
+print(whitdata)
+```
+
+```{r}
+(85/16136)*1000
+```
+
+```{r} 
+(5.267724/0.7863321)
+```
+
+```{r}
+irishdata <- subset(mydata, GNOCDC_LAB== "IRISH CHANNEL", select=c(GNOCDC_LAB, pop))
+print(irishdata)
+```
+
+```{r}
+(45/12852)*1000
+```
+
+```{r} 
+(3.501401/0.7863321)
+```
+
+
+```{r}
+erivdata <- subset(mydata, GNOCDC_LAB== "EAST RIVERSIDE", select=c(GNOCDC_LAB, pop))
+print(erivdata)
+```
+
+```{r}
+(43/8942)*1000
+```
+
+```{r} 
+(4.808768/0.7863321)
+```
+
+
+```{r}
+fairdata <- subset(mydata, GNOCDC_LAB== "FAIRGROUNDS", select=c(GNOCDC_LAB, pop))
+print(fairdata)
+```
+
+```{r}
+(70/16551)*1000
+```
+
+```{r} 
+(4.229352/0.7863321)
+```
+
+
+
+```{r}
+gentwdata <- subset(mydata, GNOCDC_LAB== "GENTILLY WOODS", select=c(GNOCDC_LAB, pop))
+print(gentwdata)
+```
+
+```{r}
+(21/11876)*1000
+```
+
+```{r} 
+(1.768272/0.7863321)
+```
+
+
+```{r}
+bsjdata <- subset(mydata, GNOCDC_LAB== "BAYOU ST. JOHN", select=c(GNOCDC_LAB, pop))
+print(bsjdata)
+```
+
+```{r}
+(50/19352)*1000
+```
+
+```{r} 
+(2.583712/0.7863321)
+```
+
+
+```{r}
+naetdata <- subset(mydata, GNOCDC_LAB== "NEW AURORA - ENGLISH TURN", select=c(GNOCDC_LAB, pop))
+print(naetdata)
+```
+
+```{r}
+(59/18524)*1000
+```
+
+```{r} 
+(3.185057/0.7863321)
+```
+
+```{r}
+fredata <- subset(mydata, GNOCDC_LAB== "FRERET", select=c(GNOCDC_LAB, pop))
+print(fredata)
+```
+
+```{r}
+(57/11419)*1000
+```
+
+```{r} 
+(4.991681/0.7863321)
+```
+
+```{r}
+gddata <- subset(mydata, GNOCDC_LAB== "GARDEN DISTRICT", select=c(GNOCDC_LAB, pop))
+print(gddata)
+```
+
+```{r}
+(25/11373)*1000
+```
+
+```{r} 
+(2.198189/0.7863321)
+```
+
+```{r}
+vistadata <- subset(mydata, GNOCDC_LAB== "LAKESHORE - LAKE VISTA", select=c(GNOCDC_LAB, pop))
+print(vistadata)
+```
+
+```{r}
+(16/12956)*1000
+```
+
+```{r} 
+(1.234949/0.7863321)
+```
+
+```{r}
+santdata <- subset(mydata, GNOCDC_LAB== "ST.  ANTHONY", select=c(GNOCDC_LAB, pop))
+print(santdata)
+```
+```{r}
+(60/13897)*1000
+```
+
+```{r} 
+(4.317479/0.7863321)
+```
+
+
+
+```{r}
+navadata <- subset(mydata, GNOCDC_LAB== "NAVARRE", select=c(GNOCDC_LAB, pop))
+print(navadata)
+```
+
+```{r}
+(17/13444)*1000
+```
+
+```{r} 
+(1.264505/0.7863321)
+```
+
+
+```{r}
+iberdata <- subset(mydata, GNOCDC_LAB== "IBERVILLE", select=c(GNOCDC_LAB, pop))
+print(iberdata)
+```
+
+```{r}
+(24/8858)*1000
+```
+
+```{r} 
+(2.709415/0.7863321)
+```
+
+```{r}
+wenddata <- subset(mydata, GNOCDC_LAB== "WEST END", select=c(GNOCDC_LAB, pop))
+print(wenddata)
+```
+
+```{r}
+(27/11316)*1000
+```
+
+```{r} 
+(2.386002/0.7863321)
+```
+
+
+```{r}
+ecarrolldata <- subset(mydata, GNOCDC_LAB== "EAST CARROLLTON", select=c(GNOCDC_LAB, pop))
+print(ecarrolldata)
+```
+
+```{r}
+(22/17782)*1000
+```
+
+```{r} 
+(1.237206/0.7863321)
+```
+
+```{r}
+cjsdata <- subset(mydata, GNOCDC_LAB== "BLACK PEARL", select=c(GNOCDC_LAB, pop))
+print(cjsdata)
+```
+
+```{r}
+(11/6569)*1000
+```
+
+```{r} 
+(1.674532/0.7863321)
+```
+
+```{r}
+lwooddata <- subset(mydata, GNOCDC_LAB== "LAKEWOOD", select=c(GNOCDC_LAB, pop))
+print(lwooddata)
+```
+
+```{r}
+(11/13989)*1000
+```
+
+```{r} 
+(.7863321/0.7863321)
+```
+
+
+
+```{r}
+pparkdata <- subset(mydata, GNOCDC_LAB== "PONTCHARTRAIN PARK", select=c(GNOCDC_LAB, pop))
+print(pparkdata)
+```
+
+```{r}
+(18/18380)*1000
+```
+
+```{r} 
+(.9793254/0.7863321)
+```
+
+
+```{r}
+flordata <- subset(mydata, GNOCDC_LAB== "FLORIDA DEV", select=c(GNOCDC_LAB, pop))
+print(flordata)
+```
+
+```{r}
+(6/4976)*1000
+```
+
+```{r} 
+(1.205788/0.7863321)
+```
+6.	There are 9963 distinct crimes committed and 219654508 in the population, so the rate of crime is .045 per 1000 person years 
+
+7. The neighborhoods with the largest population is Little Woods with 4494
+
+8.	Lakewood has the lowest rate of crime with 0.7863321 per 1000 and with a population of 13989
+
+```{r Question 9 and 10}
+aggravateddata <- mydata[mydata$Signal_Description %in% c("AGGRAVATED ASSAULT", "AGGRAVATED ASSAULT (DOMESTIC)", "AGGRAVATED BATTERY (SHOOTING)", "AGGRAVATED BATTERY (CUTTING)", "AGGRAVATED RAPE", "AGGRAVATED CRIMINAL DAMAGE", "AGGRAVATED BATTERY", "AGGRAVATED BURGLARY", "AGGRAVATED BATTERY (DOMESTIC)", "AGGRAVATED BURGLARY (DOMESTIC)", "AGGRAVATED RAPE UNFOUNDED", "ATTEMPTED AGGRAVATED RAPE"), c("Signal_Description", "pop", "GNOCDC_LAB")]
+
+print(aggravateddata)
+```
+```{r}
+tulaneagg <- subset(aggravateddata, GNOCDC_LAB== "TULANE - GRAVIER", select=c(GNOCDC_LAB, pop))
+print(tulaneagg)
+```
+```{r Tulane}
+(4/356)
+```
+```{r} 
+(0.01123596/0.05898876)
+```
+
+```{r}
+centralcityagg <- subset(aggravateddata, GNOCDC_LAB== "CENTRAL CITY", select=c(GNOCDC_LAB, pop))
+print(centralcityagg)
+```
+```{r}
+(14/356)
+```
+```{r} 
+(.03932584/0.05898876)
+```
+
+```{r}
+plumagg <- subset(aggravateddata, GNOCDC_LAB== "PLUM ORCHARD", select=c(GNOCDC_LAB, pop))
+print(plumagg)
+```
+```{r}
+(13/356)
+```
+```{r} 
+(.03651685/0.05898876)
+```
+
+```{r}
+lakeviewagg <- subset(aggravateddata, GNOCDC_LAB== "LAKEVIEW", select=c(GNOCDC_LAB, pop))
+print(lakeviewagg)
+```
+```{r}
+(1/356)
+```
+```{r} 
+(.002808989/0.05898876)
+```
+
+
+```{r}
+sevenagg <- subset(aggravateddata, GNOCDC_LAB== "SEVENTH WARD", select=c(GNOCDC_LAB, pop))
+print(sevenagg)
+```
+```{r}
+(24/356)
+```
+```{r} 
+(.06741573/0.05898876)
+```
+
+
+```{r}
+rochagg <- subset(aggravateddata, GNOCDC_LAB== "ST. ROCH", select=c(GNOCDC_LAB, pop))
+print(rochagg)
+```
+```{r}
+(17/356)
+```
+```{r} 
+(.04775281/0.05898876)
+```
+
+
+```{r}
+claudeagg <- subset(aggravateddata, GNOCDC_LAB== "ST. CLAUDE", select=c(GNOCDC_LAB, pop))
+print(claudeagg)
+```
+```{r}
+(16/356)
+```
+```{r} 
+(.04494382/0.05898876)
+```
+
+```{r}
+crossagg <- subset(aggravateddata, GNOCDC_LAB== "HOLY CROSS", select=c(GNOCDC_LAB, pop))
+print(crossagg)
+```
+```{r}
+(5/356)
+```
+```{r} 
+(.01404494/0.05898876)
+```
+
+
+```{r}
+frenchagg <- subset(aggravateddata, GNOCDC_LAB== "FRENCH QUARTER", select=c(GNOCDC_LAB, pop))
+print(frenchagg)
+```
+```{r}
+(21/356)
+```
+```{r} 
+(0.05898876/0.05898876)
+```
+
+```{r}
+ninthagg <- subset(aggravateddata, GNOCDC_LAB== "LOWER NINTH WARD", select=c(GNOCDC_LAB, pop))
+print(ninthagg)
+```
+```{r}
+(6/356)
+```
+```{r} 
+(.01685393/0.05898876)
+```
+
+
+```{r}
+auagg <- subset(aggravateddata, GNOCDC_LAB== "AUDUBON", select=c(GNOCDC_LAB, pop))
+print(auagg)
+```
+```{r}
+(0/356)
+```
+```{r} 
+(0/0.05898876)
+```
+
+```{r}
+oldagg <- subset(aggravateddata, GNOCDC_LAB== "OLD AURORA", select=c(GNOCDC_LAB, pop))
+print(oldagg)
+```
+```{r}
+(3/356)
+```
+```{r} 
+(.008426966/0.05898876)
+```
+
+```{r}
+milanagg <- subset(aggravateddata, GNOCDC_LAB== "MILAN", select=c(GNOCDC_LAB, pop))
+print(milanagg)
+```
+```{r}
+(10/356)
+```
+```{r} 
+(.02808989/0.05898876)
+```
+
+```{r}
+littleagg <- subset(aggravateddata, GNOCDC_LAB== "LITTLE WOODS", select=c(GNOCDC_LAB, pop))
+print(littleagg)
+```
+```{r}
+(41/356)
+```
+```{r} 
+(1.1151685/0.05898876)
+```
+
+
+```{r}
+cbdagg <- subset(aggravateddata, GNOCDC_LAB== "CENTRAL BUSINESS DISTRICT", select=c(GNOCDC_LAB, pop))
+print(cbdagg)
+```
+```{r}
+10/356
+```
+```{r} 
+(.02808989/0.05898876)
+```
+
+
+```{r}
+beragg <- subset(aggravateddata, GNOCDC_LAB== "BEHRMAN", select=c(GNOCDC_LAB, pop))
+print(beragg)
+```
+```{r}
+12/356
+```
+```{r} 
+(.03370787/0.05898876)
+```
+
+
+```{r}
+leonagg <- subset(aggravateddata, GNOCDC_LAB== "LEONIDAS", select=c(GNOCDC_LAB, pop))
+print(leonagg)
+```
+```{r}
+5/356
+```
+```{r} 
+(.01404494/0.05898876)
+```
+
+```{r}
+genagg <- subset(aggravateddata, GNOCDC_LAB== "GENTILLY TERRACE", select=c(GNOCDC_LAB, pop))
+print(genagg)
+```
+```{r}
+7/356
+```
+```{r} 
+(.01966292/0.05898876)
+```
+
+
+```{r}
+midagg <- subset(aggravateddata, GNOCDC_LAB== "MID-CITY", select=c(GNOCDC_LAB, pop))
+print(midagg)
+```
+```{r}
+5/356
+```
+```{r} 
+(.01404494/0.05898876)
+```
+
+
+
+
+```{r}
+cpagg <- subset(aggravateddata, GNOCDC_LAB== "CITY PARK", select=c(GNOCDC_LAB, pop))
+print(cpagg)
+```
+```{r}
+0/356
+```
+```{r} 
+0/0.05898876
+```
+
+
+```{r}
+vdlagg <- subset(aggravateddata, GNOCDC_LAB== "VILLAGE DE LEST", select=c(GNOCDC_LAB, pop))
+print(vdlagg)
+```
+```{r}
+1/356
+```
+```{r} 
+(.002808989/0.05898876)
+```
+
+
+```{r}
+fischagg <- subset(aggravateddata, GNOCDC_LAB== "FISCHER DEV", select=c(GNOCDC_LAB, pop))
+print(fischagg)
+```
+```{r}
+0/356
+```
+```{r} 
+0/0.05898876
+```
+
+
+```{r}
+westagg <- subset(aggravateddata, GNOCDC_LAB== "WEST RIVERSIDE", select=c(GNOCDC_LAB, pop))
+print(westagg)
+```
+```{r}
+0/356
+```
+```{r} 
+0/0.05898876
+```
+
+
+```{r}
+tremeagg <- subset(aggravateddata, GNOCDC_LAB== "TREME - LAFITTE", select=c(GNOCDC_LAB, pop))
+print(tremeagg)
+```
+```{r}
+5/356
+
+```
+```{r} 
+(.01404494/0.05898876)
+```
+
+
+```{r}
+tallagg <- subset(aggravateddata, GNOCDC_LAB== "TALL TIMBERS - BRECHTEL", select=c(GNOCDC_LAB, pop))
+print(tallagg)
+```
+```{r}
+8/356
+```
+```{r} 
+(.02247191/0.05898876)
+```
+
+
+```{r}
+vviagg <- subset(aggravateddata, GNOCDC_LAB== "VIAVANT - VENETIAN ISLES", select=c(GNOCDC_LAB, pop))
+print(vviagg)
+```
+```{r}
+9/356
+```
+```{r} 
+(.0252809/0.05898876)
+```
+
+
+```{r}
+lcagg <- subset(aggravateddata, GNOCDC_LAB== "LAKE CATHERINE", select=c(GNOCDC_LAB, pop))
+print(lcagg)
+```
+```{r}
+0/356
+```
+```{r} 
+0/0.05898876
+```
+
+
+```{r}
+dilagg <- subset(aggravateddata, GNOCDC_LAB== "DILLARD", select=c(GNOCDC_LAB, pop))
+print(dilagg)
+```
+```{r}
+3/356
+```
+```{r} 
+(.008426966/0.05898876)
+```
+
+
+```{r}
+wlfagg <- subset(aggravateddata, GNOCDC_LAB== "WEST LAKE FOREST", select=c(GNOCDC_LAB, pop))
+print(wlfagg)
+```
+```{r}
+14/356
+```
+```{r} 
+(.03932584/0.05898876)
+```
+
+
+```{r}
+hollyagg <- subset(aggravateddata, GNOCDC_LAB== "HOLLYGROVE", select=c(GNOCDC_LAB, pop))
+print(hollyagg)
+```
+```{r}
+9/356
+```
+```{r} 
+(.0252809/0.05898876)
+```
+
+
+```{r}
+gertagg <- subset(aggravateddata, GNOCDC_LAB== "GERT TOWN", select=c(GNOCDC_LAB, pop))
+print(gertagg)
+```
+```{r}
+5/356
+```
+```{r} 
+(.01404494/0.05898876)
+```
+
+```{r}
+ridaagg <- subset(aggravateddata, GNOCDC_LAB== "FLORIDA AREA", select=c(GNOCDC_LAB, pop))
+print(ridaagg)
+```
+```{r}
+2/356
+```
+```{r} 
+(.005617978/0.05898876)
+```
+
+
+```{r}
+lcdagg <- subset(aggravateddata, GNOCDC_LAB== "LOWER GARDEN DISTRICT", select=c(GNOCDC_LAB, pop))
+print(lcdagg)
+```
+```{r}
+3/356
+```
+```{r} 
+(.008426966/0.05898876)
+```
+
+
+```{r}
+byagg <- subset(aggravateddata, GNOCDC_LAB== "BYWATER", select=c(GNOCDC_LAB, pop))
+print(byagg)
+```
+```{r}
+8/356
+```
+```{r} 
+(.02247191/0.05898876)
+```
+
+```{r}
+maragg <- subset(aggravateddata, GNOCDC_LAB== "MARIGNY", select=c(GNOCDC_LAB, pop))
+print(maragg)
+```
+```{r}
+0/356
+```
+```{r} 
+0/0.05898876
+```
+
+
+```{r}
+desireagg <- subset(aggravateddata, GNOCDC_LAB== "DESIRE AREA", select=c(GNOCDC_LAB, pop))
+print(desireagg)
+```
+```{r}
+7/356
+```
+```{r} 
+.01966292/0.05898876
+```
+
+```{r}
+bwagg <- subset(aggravateddata, GNOCDC_LAB== "B. W. COOPER", select=c(GNOCDC_LAB, pop))
+print(bwagg)
+```
+```{r}
+0/356
+```
+```{r} 
+0/0.05898876
+```
+
+
+
+```{r}
+stdagg <- subset(aggravateddata, GNOCDC_LAB== "ST. THOMAS DEV", select=c(GNOCDC_LAB, pop))
+print(stdagg)
+```
+```{r}
+1/356
+```
+```{r} 
+.002808989/0.05898876
+```
+
+
+
+```{r}
+dixagg <- subset(aggravateddata, GNOCDC_LAB== "DIXON", select=c(GNOCDC_LAB, pop))
+print(dixagg)
+```
+```{r}
+2/356
+```
+```{r} 
+.005617978/0.05898876
+```
+
+
+```{r}
+navyagg <- subset(aggravateddata, GNOCDC_LAB== "U.S. NAVAL BASE", select=c(GNOCDC_LAB, pop))
+print(navyagg)
+```
+```{r}
+5/356
+```
+```{r} 
+.01404494/0.05898876
+```
+
+
+
+
+```{r}
+pinesagg <- subset(aggravateddata, GNOCDC_LAB== "PINES VILLAGE", select=c(GNOCDC_LAB, pop))
+print(pinesagg)
+```
+```{r}
+2/356
+```
+```{r} 
+.005617978/0.05898876
+```
+
+
+
+```{r}
+maryagg <- subset(aggravateddata, GNOCDC_LAB== "MARLYVILLE - FONTAINEBLEAU", select=c(GNOCDC_LAB, pop))
+print(maryagg)
+```
+```{r}
+2/356
+
+```
+```{r} 
+.005617978/0.05898876
+```
+
+
+```{r}
+milnagg <- subset(aggravateddata, GNOCDC_LAB== "MILNEBURG", select=c(GNOCDC_LAB, pop))
+print(milnagg)
+```
+```{r}
+4/356
+```
+```{r} 
+.01123596/0.05898876
+```
+
+
+
+
+```{r}
+rbeagg <- subset(aggravateddata, GNOCDC_LAB== "READ BLVD EAST", select=c(GNOCDC_LAB, pop))
+print(rbeagg)
+```
+```{r}
+4/356
+```
+```{r} 
+.01123596/0.05898876
+```
+
+
+
+```{r}
+rbwagg <- subset(aggravateddata, GNOCDC_LAB== "READ BLVD WEST", select=c(GNOCDC_LAB, pop))
+print(rbwagg)
+```
+```{r}
+1/356
+```
+```{r} 
+.002808989/0.05898876
+```
+
+
+
+```{r}
+algpagg <- subset(aggravateddata, GNOCDC_LAB== "ALGIERS POINT", select=c(GNOCDC_LAB, pop))
+print(algpagg)
+```
+```{r}
+0/356
+```
+```{r} 
+0/0.05898876
+```
+
+
+
+```{r}
+sbaagg <- subset(aggravateddata, GNOCDC_LAB== "ST. BERNARD AREA", select=c(GNOCDC_LAB, pop))
+print(sbaagg)
+```
+```{r}
+0/356
+```
+```{r} 
+0/0.05898876
+```
+
+
+```{r}
+touragg <- subset(aggravateddata, GNOCDC_LAB== "TOURO", select=c(GNOCDC_LAB, pop))
+print(touragg)
+```
+```{r}
+1/356
+```
+```{r} 
+.002808989/0.05898876
+```
+
+
+
+
+```{r}
+uptagg <- subset(aggravateddata, GNOCDC_LAB== "UPTOWN", select=c(GNOCDC_LAB, pop))
+print(uptagg)
+```
+```{r}
+0/356
+```
+```{r} 
+0/0.05898876
+```
+
+
+
+```{r}
+broadagg <- subset(aggravateddata, GNOCDC_LAB== "BROADMOOR", select=c(GNOCDC_LAB, pop))
+print(broadagg)
+```
+```{r}
+7/356
+```
+```{r} 
+.01966292/0.05898876
+```
+
+
+
+```{r}
+mcdagg <- subset(aggravateddata, GNOCDC_LAB== "McDONOGH", select=c(GNOCDC_LAB, pop))
+print(mcdagg)
+```
+```{r}
+2/356
+```
+```{r} 
+.005617978/0.05898876
+```
+
+
+
+```{r}
+filmagg <- subset(aggravateddata, GNOCDC_LAB== "FILMORE", select=c(GNOCDC_LAB, pop))
+print(filmagg)
+```
+```{r}
+2/356
+```
+```{r} 
+.005617978/0.05898876
+```
+
+
+
+
+```{r}
+ltoagg <- subset(aggravateddata, GNOCDC_LAB== "LAKE TERRACE & OAKS", select=c(GNOCDC_LAB, pop))
+print(ltoagg)
+```
+```{r}
+1/356
+```
+```{r} 
+.002808989/0.05898876
+```
+
+
+
+```{r}
+whitagg <- subset(aggravateddata, GNOCDC_LAB== "WHITNEY", select=c(GNOCDC_LAB, pop))
+print(whitagg)
+```
+```{r}
+1/356
+```
+```{r} 
+.002808989/0.05898876
+```
+
+
+
+```{r}
+irishagg <- subset(aggravateddata, GNOCDC_LAB== "IRISH CHANNEL", select=c(GNOCDC_LAB, pop))
+print(irishagg)
+```
+```{r}
+1/356
+```
+```{r} 
+.002808989/0.05898876
+```
+
+
+
+
+```{r}
+erivagg <- subset(aggravateddata, GNOCDC_LAB== "EAST RIVERSIDE", select=c(GNOCDC_LAB, pop))
+print(erivagg)
+```
+```{r}
+2/356
+```
+```{r} 
+.005617978/0.05898876
+```
+
+
+
+
+```{r}
+fairagg <- subset(aggravateddata, GNOCDC_LAB== "FAIRGROUNDS", select=c(GNOCDC_LAB, pop))
+print(fairagg)
+```
+```{r}
+6/356
+```
+```{r} 
+.01685393/0.05898876
+```
+
+
+
+
+```{r}
+gentwagg <- subset(aggravateddata, GNOCDC_LAB== "GENTILLY WOODS", select=c(GNOCDC_LAB, pop))
+print(gentwagg)
+```
+```{r}
+1/356
+```
+```{r} 
+.002808989/0.05898876
+```
+
+
+
+```{r}
+bsjagg <- subset(aggravateddata, GNOCDC_LAB== "BAYOU ST. JOHN", select=c(GNOCDC_LAB, pop))
+print(bsjagg)
+```
+```{r}
+1/356
+```
+```{r} 
+.002808989/0.05898876
+```
+
+
+
+
+```{r}
+naetagg <- subset(aggravateddata, GNOCDC_LAB== "NEW AURORA - ENGLISH TURN", select=c(GNOCDC_LAB, pop))
+print(naetagg)
+```
+```{r}
+3/356
+```
+```{r} 
+.008426966/0.05898876
+```
+
+
+
+
+```{r}
+freagg <- subset(aggravateddata, GNOCDC_LAB== "FRERET", select=c(GNOCDC_LAB, pop))
+print(freagg)
+```
+```{r}
+0/356
+```
+```{r} 
+0/0.05898876
+```
+
+
+
+
+```{r}
+gdagg <- subset(aggravateddata, GNOCDC_LAB== "GARDEN DISTRICT", select=c(GNOCDC_LAB, pop))
+print(gdagg)
+```
+```{r}
+0/356
+```
+```{r} 
+0/0.05898876
+```
+
+
+
+```{r}
+vistaagg <- subset(aggravateddata, GNOCDC_LAB== "LAKESHORE - LAKE VISTA", select=c(GNOCDC_LAB, pop))
+print(vistaagg)
+```
+```{r}
+0/356
+```
+```{r} 
+0/0.05898876
+```
+
+
+
+```{r}
+santagg <- subset(aggravateddata, GNOCDC_LAB== "ST.  ANTHONY", select=c(GNOCDC_LAB, pop))
+print(santagg)
+```
+```{r}
+1/356
+```
+```{r} 
+.002808989/0.05898876
+```
+
+
+
+
+
+```{r}
+navaagg <- subset(aggravateddata, GNOCDC_LAB== "NAVARRE", select=c(GNOCDC_LAB, pop))
+print(navaagg)
+```
+```{r}
+1/356
+```
+```{r} 
+.002808989/0.05898876
+```
+
+
+
+
+```{r}
+iberagg <- subset(aggravateddata, GNOCDC_LAB== "IBERVILLE", select=c(GNOCDC_LAB, pop))
+print(iberagg)
+```
+```{r}
+1/356
+```
+```{r} 
+.002808989/0.05898876
+```
+
+
+
+```{r}
+wendagg <- subset(aggravateddata, GNOCDC_LAB== "WEST END", select=c(GNOCDC_LAB, pop))
+print(wendagg)
+```
+```{r}
+2/356
+```
+```{r} 
+.005617978/0.05898876
+```
+
+
+
+
+```{r}
+ecarrollagg <- subset(aggravateddata, GNOCDC_LAB== "EAST CARROLLTON", select=c(GNOCDC_LAB, pop))
+print(ecarrollagg)
+```
+```{r}
+0/356
+```
+```{r} 
+0/356
+```
+
+
+
+```{r}
+cjsagg <- subset(aggravateddata, GNOCDC_LAB== "BLACK PEARL", select=c(GNOCDC_LAB, pop))
+print(cjsagg)
+```
+```{r}
+0/356
+```
+```{r} 
+0/0.05898876
+```
+
+
+
+
+```{r}
+lwoodagg <- subset(aggravateddata, GNOCDC_LAB== "LAKEWOOD", select=c(GNOCDC_LAB, pop))
+print(lwoodagg)
+```
+```{r}
+0/356
+```
+```{r} 
+0/0.05898876
+```
+
+
+
+
+
+```{r}
+pparkagg <- subset(aggravateddata, GNOCDC_LAB== "PONTCHARTRAIN PARK", select=c(GNOCDC_LAB, pop))
+print(pparkagg)
+```
+```{r}
+0/356
+```
+```{r} 
+0/0.05898876
+```
+
+
+
+
+```{r}
+floragg <- subset(aggravateddata, GNOCDC_LAB== "FLORIDA DEV", select=c(GNOCDC_LAB, pop))
+print(floragg)
+```
+```{r}
+1/356
+```
+```{r} 
+.002808989/0.05898876
+```
+
+9. See calculations above
+10. See calculations above
+
+
+```{r Question 11}
+table(mydata$Signal_Description)
+```
+
+```{r Question 11}
+table(mydata$Charge_Description)
+```
+11. the most common signal description is Domestic disturbance 1601,  the most common charge description is theft is 733
+
+
+```{r Question 12}
+abusedata <- subset(mydata, Signal_Description=="DISTURBANCE (DOMESTIC)", select=c(Signal_Description, GNOCDC_LAB, pop))
+
+
+print(abusedata)
+```
+
+12. see table above
+
+```{r}
+abusedata$rate <- ((abusedata$Signal_Description == "DISTURBANCE (DOMESTIC)")/(abusedata$pop))
+
+distinct(abusedata)
+print(abusedata)
+```
+
+```{r}
+distinct(abusedata)
+q12data <- subset(abusedata, select=c("rate", "GNOCDC_LAB"))
+distinct(q12data)
+```
+
+
+```{r Question 13}
+
+
+
+
+summarydata <- subset(mydata, select=c("Victim_Age", "Signal_Description", "pop", "GNOCDC_LAB"))
+distinct(summarydata)
+
+
+
+```
+
+
+
+```{r}
+na.omit(mydata$GNOCDC_LAB)
+
+victimage <- mydata %>% group_by(GNOCDC_LAB, Victim_Age)
+percentdata <- mutate(merged, rate= ((n/pop)*1000))
+both <-right_join(percentdata, victimage)
+lm(rate~meanage, data=both)
+```
+13. See regression above
+
+```{r Question 14}
+```
+
+```{r Question 15}
+pdata <- rpois(10000, 4.7)
+
+print(pdata)
+
+hist(pdata)
+```
+
+15. See histogram above
+
+```{r Question 16}
+library(datasets)
+data(iris)
+summary(iris)
+```
+
+
+```{r}
+library(datasets)
+data(iris)
+summary(iris)
+```
+```{r}
+flower <- split(iris,iris$Species)
+str(flower)
+res <- list()
+for(n in names(flower)){   
+   dat <- flower[[n]]   
+   res[[n]] <- data.frame(species=n,
+                          mean.sepal.length=mean(dat$Sepal.Length))
+                         
+}
+print(res)
+```
+
+16. Setosa mean length is 5.006, Veriscolor mean length is 5.936, Virginica mean length is 6.588
+
+```{rQuestion 17}
+library(datasets)
+data(mtcars)
+summary(mtcars)
+```
+
+```{r}
+plot(mtcars$mpg~mtcars$disp)
+abline(lm(mtcars$mpg~mtcars$disp))
+```
+17. See graph above
+
+```{r}
+zscores <- c(-4.89, -1.93, -1.11, 3.94, 0.46, -3.85, -0.20, 6.04,
+9.36, 7.26, 4.88, 13.45, -2.93, 6.39, -16.22, -3.24, 6.86, 11.87, 1.81, -2.54)
+
+
+print(zscores)
+
+summary(zscores)
+sd(zscores)
+```
+
+```{r}
+((-4.89)-(1.77))/6.878557
+```
+```{r}
+((-1.93)-(1.77))/6.878557
+```
+```{r}
+((-1.11)-(1.77))/6.878557
+```
+```{r}
+((3.94)-(1.77))/6.878557
+```
+```{r}
+((.46)-(1.77))/6.878557
+```
+```{r}
+((-3.85)-(1.77))/6.878557
+```
+```{r}
+((-.2)-(1.77))/6.878557
+```
+```{r}
+((6.04)-(1.77))/6.878557
+```
+```{r}
+((9.36)-(1.77))/6.878557
+```
+```{r}
+((7.26)-(1.77))/6.878557
+```
+```{r}
+((4.88)-(1.77))/6.878557
+```
+```{r}
+((13.45)-(1.77))/6.878557
+```
+```{r}
+((-2.93)-(1.77))/6.878557
+```
+```{r}
+((6.39)-(1.77))/6.878557
+```
+```{r}
+((-16.22)-(1.77))/6.878557
+```
+```{r}
+((-3.24)-(1.77))/6.878557
+```
+```{r}
+((-6.86)-(1.77))/6.878557
+```
+```{r}
+((11.87)-(1.77))/6.878557
+```
+```{r}
+((1.81)-(1.77))/6.878557
+```
+```{r}
+((-2.54)-(1.77))/6.878557
+```
+18. See calculations above
