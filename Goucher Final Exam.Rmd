@@ -3,34 +3,6 @@ title: "SPHU 4160 Final"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-
-#why is this dataset here?
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
-
-
-
 
 ```{r setup} 
 #Preamble
@@ -55,12 +27,14 @@ date()
 ```
 
 ```{r Get Working Directory}
-getwd()
-setwd("/Users/Erin/Documents/sphu4160/fall_2019/class_library_R")
+#getwd()
+#setwd("/Users/Erin/Documents/sphu4160/fall_2019/class_library_R")
 ``` 
 
 ```{r Import Data}
-mydata <-read.csv("/Users/Erin/Documents/sphu4160/fall_2019/class_library_R")
+mydata <-read.csv("nola_crime_2018.csv")
+
+# if this is the working directory (as shown above, then it isnt a file name and wont load anything.)
 ```
 
 ```{r Questions 1 and 2}
@@ -172,8 +146,7 @@ table(mydata$GNOCDC_LAB)
 popdata <- subset(mydata, select=c(pop,GNOCDC_LAB))
 popdata[!duplicated(popdata[1:2]),]
 sum(popdata$pop, na.rm=TRUE)
-#for question 6, there are three issues: 1. I don't see that you used the dataset with only unique item numbers (n=9384). I see you using mydata which contains 9970 observations, 2. For your calculations, it should read as (no. crimes*1000)/mean(population for each neighborhood) 3. the question asks for the rate per 1000 persons for each neighborhood and not the dataset as a whole
-calculate the rate of crime (unique items)
+#for question 6, there are three issues: 1. I don't see that you used the dataset with only unique item numbers (n=9384). I see you using mydata which contains 9970 observations, 2. For your calculations, it should read as (no. crimes*1000)/mean(population for each neighborhood) 3. the question asks for the rate per 1000 persons for each neighborhood and not the dataset as a whole calculate the rate of crime (unique items)
 ```
 ```{r}
 tulanedata <- subset(mydata, GNOCDC_LAB== "TULANE - GRAVIER", select=c(GNOCDC_LAB, pop))
@@ -2136,7 +2109,7 @@ summary(iris)
 ```
 
 
-```{r}
+
 
 ```{r}
 flower <- split(iris,iris$Species)
