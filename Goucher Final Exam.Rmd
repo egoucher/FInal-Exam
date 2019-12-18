@@ -3,32 +3,6 @@ title: "SPHU 4160 Final"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
-
-
-
 
 ```{r setup} 
 #Preamble
@@ -53,12 +27,14 @@ date()
 ```
 
 ```{r Get Working Directory}
-getwd()
-setwd("/Users/Erin/Documents/sphu4160/fall_2019/class_library_R")
+#getwd()
+#setwd("/Users/Erin/Documents/sphu4160/fall_2019/class_library_R")
 ``` 
 
 ```{r Import Data}
-mydata <-read.csv("C://Users/Erin/Documents/sphu4160/fall_2019/class_library_R/nola_CRIME_2018.csv")
+mydata <-read.csv("nola_crime_2018.csv")
+
+# if this is the working directory (as shown above, then it isnt a file name and wont load anything.)
 ```
 
 ```{r Questions 1 and 2}
@@ -66,11 +42,12 @@ dim(mydata)
 ```
 
 1. 9970 observations
-2. 24 variable
+2. 24 variables
 
 
 ```{r Question 3}
 unique(mydata)
+#you didn't provide a response to the question, based on your table, it has 9963 rows. The correct answer is 9384 unique item numbers.
 ```
 
 
@@ -159,6 +136,8 @@ print(q411data)
 ```{r Question 5}
 
 table(mydata$GNOCDC_LAB)
+
+#I don't see your answers to question 5 (just the table below). 
 ```
 
 5.
@@ -167,6 +146,7 @@ table(mydata$GNOCDC_LAB)
 popdata <- subset(mydata, select=c(pop,GNOCDC_LAB))
 popdata[!duplicated(popdata[1:2]),]
 sum(popdata$pop, na.rm=TRUE)
+#for question 6, there are three issues: 1. I don't see that you used the dataset with only unique item numbers (n=9384). I see you using mydata which contains 9970 observations, 2. For your calculations, it should read as (no. crimes*1000)/mean(population for each neighborhood) 3. the question asks for the rate per 1000 persons for each neighborhood and not the dataset as a whole calculate the rate of crime (unique items)
 ```
 ```{r}
 tulanedata <- subset(mydata, GNOCDC_LAB== "TULANE - GRAVIER", select=c(GNOCDC_LAB, pop))
@@ -1117,7 +1097,9 @@ print(flordata)
 
 ```{r} 
 (1.205788/0.7863321)
-```
+
+``` 
+
 
 6.	There are 9963 distinct crimes committed and 219654508 in the population, so the rate of crime is .045 per 1000 person years 
 
@@ -1140,6 +1122,7 @@ print(tulaneagg)
 ```
 ```{r} 
 (0.01123596/0.05898876)
+#the correct answer for this is: rate: 11.7512181	population: 17445	rate ratio: 16.438779
 ```
 
 ```{r}
@@ -2070,6 +2053,8 @@ print(abusedata)
 distinct(abusedata)
 q12data <- subset(abusedata, select=c("rate", "GNOCDC_LAB"))
 distinct(q12data)
+
+#your figures are slightly off, for example for central city, the correct answer is no. domestic disturbances= 73	population= 35385	rate: 2.063021e-03, and for plum orchard it is: 24 (no. domestic disturbances), population=14671	rate: 1.635880e-03
 ```
 
 
@@ -2094,6 +2079,8 @@ na.omit(mydata$GNOCDC_LAB)
 
 victimage <- mydata %>% group_by(GNOCDC_LAB, Victim_Age)
 percentdata <- mutate(merged, rate= ((n/pop)*1000))
+#code didn't run as the merged object had not previously been created, as a results the object percentdata was not created and hindered the below step
+
 both <-right_join(percentdata, victimage)
 lm(rate~meanage, data=both)
 ```
@@ -2122,11 +2109,8 @@ summary(iris)
 ```
 
 
-```{r}
-library(datasets)
-data(iris)
-summary(iris)
-```
+
+
 ```{r}
 flower <- split(iris,iris$Species)
 str(flower)
@@ -2151,6 +2135,7 @@ summary(mtcars)
 ```{r}
 plot(mtcars$mpg~mtcars$disp)
 abline(lm(mtcars$mpg~mtcars$disp))
+#this is fine, points taken off for not using different colors to distinguish the different cylinders
 ```
 17. See graph above
 
@@ -2224,5 +2209,6 @@ sd(zscores)
 ```
 ```{r}
 ((-2.54)-(1.77))/6.878557
+
 ```
 18. See calculations above
